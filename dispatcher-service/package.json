@@ -1,0 +1,45 @@
+{
+  "name": "dispatcher-service",
+  "version": "1.0.0",
+  "org": "DTE 2.0",
+  "description": "Dispatch sequences of requests to create artifacts",
+  "main": "index.js",
+  "config": {
+    "protocol": "https",
+    "host": "localhost",
+    "port": 3005,
+    "contextRoot": "",
+    "redisHost": "localhost",
+    "redisPort": 6379,
+    "redisPass": "TempPass",
+    "redisNamespace": "rsmq",
+    "redisQueue": "dispatcherService",
+    "mongoHost": "mongodb://127.0.0.1:27017/dispatcher-service"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start:dev": "nodemon ./src/index.ts",
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SteeleDesmond/ccp-dispatcher-service.git"
+  },
+  "keywords": [
+    "Node",
+    "TypeScript",
+    "Dispatcher",
+    "Service"
+  ],
+  "author": "Steele Ray Desmond",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/SteeleDesmond/ccp-dispatcher-service/issues"
+  },
+  "homepage": "https://github.com/SteeleDesmond/ccp-dispatcher-service#readme",
+  "dependencies": {
+    "@types/node": "^14.11.5"
+  }
+}
