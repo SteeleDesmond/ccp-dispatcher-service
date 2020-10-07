@@ -1,0 +1,55 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: {{.Values.service}}
+  namespace: {{.Values.namespace}}
+  labels:
+    app: {{.Values.service}}
+    # app.kubernetes.io/name: 
+  #   app.kubernetes.io/part-of: ccp
+  #   app.kubernetes.io/component: backend
+  #   app.kubernetes.io/instance: {{.Values.service}}
+  #   app.openshift.io/runtime: nodejs
+  # annotations:
+  #   app.openshift.io/vcs-ref: {{.Values.imageBranch}}
+  #   app.openshift.io/vcs-uri: 'https://github.ibm.com/dte2-0/ccp-vmware-install-agent.git'
+spec:
+  # nodeSelector: null
+  successfulBuildsHistoryLimit: 3
+  failedBuildsHistoryLimit: 3
+  strategy:
+    # type: Source
+    # sourceStrategy:
+    #   from:
+    #     kind: ImageStreamTag
+    #     namespace: {{ .Values.namespace }}
+    #     name: {{ .Values.service }}
+      # env:
+      # - name: NPM_MIRROR
+      #   value: {{ .Values.npm_mirror | quote }}
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: {{ print .Values.service ":latest" | quote }}
+  source:
+    type: Git
+    git:
+      uri: 'https://github.ibm.com/dte2-0/ccp-vmware-install-agent.git'
+      ref: {{.Values.imageBranch}}
+    contextDir: /install-agent
+    sourceSecret:
+      name: {{.Values.githubSecret}}
+  triggers:
+    - type: ImageChange
+    - type: ConfigChange
+    - type: Generic
+      generic:
+        secretReference:
+          name: {{.Values.service}}-generic-webhook-secret
+    - type: GitHub
+      github:
+        secretReference:
+          name: {{.Values.service}}-github-webhook-secret

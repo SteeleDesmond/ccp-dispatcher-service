@@ -1,0 +1,40 @@
+# Default values for vmware-install-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: ccp-test
+# serviceName: vmware-install-agent
+# serviceTag: -test # test or blank for prod
+service: vmware-install-agent-test
+# service: "{{ $.Values.serviceName }}{{ $.Values.serviceTag }}"
+# service: {{ printf "%s-%s" {{ $.Values.serviceName }} - {{ $.Values.serviceTag }} | quote }}
+
+githubSecret: github-auth-token
+# Assumed serviceaccount is available in cluster
+# ServiceAccount to access the imageUrl, with a secret needed in the project space to pull from registry
+serviceAccountName: pipeline
+
+# Image for vmware-install-agent
+# imageUrl: registry.csplab.local:5000/dte/vmware-install-agent
+imageUrl: image-registry.openshift-image-registry.svc:5000/ccp-test/vmware-install-agent-test
+imageTag: latest
+imageBranch: development
+
+
+
+ccpConfig: ccp-configmap
+# The HOST/NAME/PORT are grabbed from Config, Secret grabs USER/PASS
+# To edit, change under deployment.yaml
+mongoConfig: mongodb-test-cm
+mongoSecret: mongodb-test
+
+redisConfig: redis-test
+redisPassKey: database-password
+
+hostUrl: vmware-install-agent-test.apps.labdev-ccp.ocp.csplab.local
+
+# {{- $serviceName := .Values.serviceName -}}
+# {{- $serviceTag := .Values.serviceTag -}}
+# {{- if $serviceTag}}
+# {{- $service = print .Values.serviceName  "-" .Values.serviceTag -}}
+# {{- end}}

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{.Values.service}}
+  name: {{.Values.service}}
+  namespace: {{.Values.namespace}}
+spec:
+  selector:
+    name: {{.Values.service}}
+  ports:
+    - protocol: TCP
+      # TBD: Need to check the port
+      name: 3005-tcp
+      port: 3005
+      targetPort: 3005

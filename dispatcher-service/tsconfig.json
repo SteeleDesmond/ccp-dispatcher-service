@@ -23,7 +23,7 @@
   },
   "include": [
     "src/**/*",
-    "test/**/*", "test-servers"
+    "test/**/*", "test-servers", "jest-mongodb-config.js"
   ],
   "exclude": [
     "node_modules"

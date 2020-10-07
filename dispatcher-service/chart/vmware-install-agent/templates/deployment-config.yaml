@@ -1,0 +1,160 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: {{ .Values.service | quote }}
+  namespace: {{.Values.namespace}}
+  labels:
+    app: {{.Values.service}}
+    app.kubernetes.io/name: {{.Values.service}}
+    app.kubernetes.io/part-of: ccp
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/instance: {{.Values.service}}
+    app.openshift.io/runtime: nodejs
+  annotations:
+    app.openshift.io/vcs-ref: {{.Values.imageBranch}}
+    app.openshift.io/vcs-uri: 'https://github.ibm.com/dte2-0/ccp-vmware-install-agent.git'
+spec:
+  strategy:
+    type: Rolling
+  triggers:
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - {{.Values.service}}
+      from:
+        kind: ImageStreamTag
+        name: {{ print .Values.service ":latest" | quote }}
+  - type: ConfigChange
+  replicas: 1
+  selector:
+    name: {{ .Values.service | quote }}
+  template:
+    metadata:
+      name: {{ .Values.service | quote }}
+      labels:
+        name: {{ .Values.service | quote }}
+    spec:
+      serviceAccountName: {{.Values.serviceAccountName}}
+      containers:
+      - name: {{.Values.service}}
+        # Quote the image path to avoid issues with a colon in the path
+        image: {{.Values.imageUrl}}
+        resources:
+          requests:
+            memory: "500m"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3005
+        # readinessProbe:
+        #   timeoutSeconds: 3
+        #   initialDelaySeconds: 3
+        #   httpGet:
+        #     path: "/"
+        #     port: 3005
+        # livenessProbe:
+        #   timeoutSeconds: 3
+        #   initialDelaySeconds: 30
+        #   httpGet:
+        #     path: "/health"
+        #     port: 3005
+        env:
+        - name: API_VERSION
+          value: 1.0.0
+        - name: PORT
+          value: "3005"
+        - name: REDISHOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDISHOST
+        - name: REDISPORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDISPORT
+        - name: REDISPASS
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.redisConfig}}
+              key: {{.Values.redisPassKey}}
+        - name: VMWARE_INSTALL_AGENT_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDIS_VMWAREINSTALLAGENT_QUEUE
+        - name: VMWARE_SERVICE_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDIS_VMWARE_QUEUE
+        - name: INFOBLOX_SERVICE_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDIS_INFOBLOX_QUEUE
+        - name: VYOS_SERVICE_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDIS_VYOS_QUEUE
+        - name: F5_SERVICE_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDIS_F5_QUEUE
+        - name: OPENSHIFT_INSTALL_SERVICE_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDIS_OCPINSTALLER_QUEUE
+        - name: AUTHENTICATION_SERVICE_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDIS_LDAP_QUEUE
+        - name: NOTIFICATION_SERVICE_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.ccpConfig}}
+              key: REDIS_NOTIFICATION_QUEUE
+        - name: MONGOPASS
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.mongoSecret}}
+              key: database-password
+        - name: MONGOUSER
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.mongoSecret}}
+              key: database-user
+        - name: MONGOHOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.mongoConfig}}
+              key: MONGOHOST
+        - name: MONGONAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.mongoConfig}}
+              key: MONGONAME
+        - name: MONGOPORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{.Values.mongoConfig}}
+              key: MONGOPORT
+        volumeMounts:
+          - mountPath: /app/certs
+            name: cert-vol
+      volumes:
+      - configMap:
+          items:
+          - key: key.pem
+            path: key.pem
+          - key: cert.pem
+            path: cert.pem
+          name: {{.Values.service}}-certs
+        name: cert-vol
