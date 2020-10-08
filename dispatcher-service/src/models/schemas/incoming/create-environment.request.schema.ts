@@ -1,7 +1,7 @@
-export class CreateArtifactRequestSchema {
+export class CreateEnvironmentRequestSchema {
 
   schema: any = {
-    "title": "Create Artifact Request",
+    "title": "Create Environment Request",
     "type": "object",
     "required": [
       "apiVersion",

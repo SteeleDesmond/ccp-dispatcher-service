@@ -1,11 +1,11 @@
 import {ContainerConfiguration, Scope} from 'typescript-ioc';
-import {ArtifactApi} from './artifact.api';
-import {ArtifactService} from './artifact.service';
+import {EnvironmentApi} from './environment.api';
+import {EnvironmentService} from './environment.service';
 
 const config: ContainerConfiguration[] = [
   {
-    bind: ArtifactApi,
-    to: ArtifactService,
+    bind: EnvironmentApi,
+    to: EnvironmentService,
     scope: Scope.Singleton
   }
 ];

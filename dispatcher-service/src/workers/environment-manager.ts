@@ -3,15 +3,15 @@ import { Container, ContainerConfiguration, Inject, Scope } from 'typescript-ioc
 import { LoggerApi } from '../logger';
 import { forkJoin, Observable } from 'rxjs';
 import { WorkerManager } from './worker-manager.api';
-import { ArtifactWorker } from './artifact.worker';
+import { EnvironmentWorker } from './environment.worker';
 import Timeout = NodeJS.Timeout;
-import { ArtifactWorkerConfig } from '../config/artifact-worker.config';
+import { EnvironmentWorkerConfig } from '../config/environment-worker.config';
 // import { InstallAgentWorkerConfig } from '../config/install-agent-worker.config';
 
 
 
-class ArtifactManager implements WorkerManager {
-  @Inject workerConfig: ArtifactWorkerConfig;
+class EnvironmentManager implements WorkerManager {
+  @Inject workerConfig: EnvironmentWorkerConfig;
   @Inject _logger: LoggerApi;
   private redis: any;
   private interval: Timeout;
@@ -26,19 +26,19 @@ class ArtifactManager implements WorkerManager {
    * @param worker An OpenShift worker which has its startingData
    */
   public registerWorker(worker: WorkerApi): WorkerApi {
-    this.logger.trace("Registered New OpenShift Worker");
+    this.logger.trace("Registered new Environmentworker");
     if (worker) { // TODO May want to implement checks before starting the worker
-      if (worker.type() == "openshift") {
+      if (worker.type() == "environmentWorker") {
         if (this.getWorker(worker.getId())) { // If a worker with this ID exists queue the worker
           this.logger.info(`There is currently an active job for ${worker.getId()}. Task ${worker.getTask()} will start once the existing job completes or times out`);
           this.queuedWorkers.push(worker);
           worker.setDeploymentStatus('Pending'); // TODO Update queued worker status' and/or provide REST endpoint to all active/queued workers
-          this.logger.trace("Queued New OpenShift Worker");
+          this.logger.trace("Queued New EnvironmentWorker");
         }
         else {
           this.activeWorkers.push(worker);
           worker.start(this.redis);
-          this.logger.trace("Started New OpenShift Worker");
+          this.logger.trace("Started New EnvironmentWorker");
         }
       }
       this.workers.push(worker);
@@ -151,7 +151,7 @@ class ArtifactManager implements WorkerManager {
    * Get an openshift worker by id
    * @param transactionId 
    */
-  private getWorker(transactionId: string): ArtifactWorker {
+  private getWorker(transactionId: string): EnvironmentWorker {
     var worker;
     // for(var w of this.openShiftWorkers) { // For debugging
     //   console.log(`Worker ID: ${w.getId()}`);
@@ -205,7 +205,7 @@ class ArtifactManager implements WorkerManager {
 
 
   get logger(): LoggerApi {
-    return this._logger.child('OpenShiftWorkerManager');
+    return this._logger.child('EnvironmentManager');
   }
 }
 
@@ -213,9 +213,9 @@ class ArtifactManager implements WorkerManager {
 export const config: ContainerConfiguration[] = [
   {
     bind: WorkerManager,
-    to: ArtifactManager,
+    to: EnvironmentManager,
     scope: Scope.Singleton
   }
 ];
 
-export const artifactManager: WorkerManager = Container.get(ArtifactManager);
+export const environmentManager: WorkerManager = Container.get(EnvironmentManager);

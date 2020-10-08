@@ -1,6 +1,6 @@
 import * as npmPackage from '../../package.json';
 
-export class ArtifactWorkerConfig {
+export class EnvironmentWorkerConfig {
 
   get requestQueue(): string {
     return process.env.DISPATCHER_QUEUE || npmPackage.config.dispatcherQueue;

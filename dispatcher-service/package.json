@@ -14,7 +14,7 @@
     "redisPass": "TempPass",
     "redisNamespace": "rsmq",
     "dispatcherQueue": "dispatcherService",
-    "mongoHost": "mongodb://127.0.0.1:27017/vmware-install-agent"
+    "mongoHost": "mongodb://127.0.0.1:27017/dispatcher-service"
   },
   "pact": {
     "providerBaseUrl": "",

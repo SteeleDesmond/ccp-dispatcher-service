@@ -1,4 +1,4 @@
-import { OpenShiftWorkerConfig } from '../src/config/artifact-worker.config';
+import { OpenShiftWorkerConfig } from '../src/config/environment-worker.config';
 
 describe('openshift-worker.config', () => {
   test('canary verifies test infrastructure', () => {

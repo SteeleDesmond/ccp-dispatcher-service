@@ -1,11 +1,11 @@
 import { Inject } from 'typescript-ioc';
-import { ArtifactWorkerConfig } from 'src/config/artifact-worker.config';
+import { EnvironmentWorkerConfig } from 'src/config/environment-worker.config';
 
 
 export class OutgoingRequestSchema {
 
   @Inject
-  private config: ArtifactWorkerConfig;
+  private config: EnvironmentWorkerConfig;
 
   schema: any = {
     "title": "Generic Outgoing Redis Request",
@@ -29,7 +29,7 @@ export class OutgoingRequestSchema {
       "service": {
         "type": "string",
         "enum": [
-          // this.config.requestQueue
+          this.config.requestQueue
         ]
       },
       "requestType": {

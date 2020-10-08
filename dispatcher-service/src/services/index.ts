@@ -1,7 +1,7 @@
 import { Container } from "typescript-ioc";
 
-export * from './artifact.api';
-export * from './artifact.service';
+export * from './environment.api';
+export * from './environment.service';
 
 import config from './ioc.config';
 

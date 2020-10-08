@@ -1,6 +1,6 @@
 
 import {Observable} from 'rxjs';
-import { Task, Status } from '../models/ticket';
+import { Task } from '../models/environment';
 
 // tslint:disable:no-any
 export abstract class WorkerApi {
@@ -56,6 +56,16 @@ export interface WorkerStatus {
   message?: string,
   requestTimes?: {},
 }
+
+export enum Status {
+  PROVISIONING = "Provisioning",
+  UPDATING = "Updating",
+  DELETING = "Deleting",
+  SUCCESS = "Success",
+  FAILED = "Failed",
+  ERROR = "Error"
+}
+
 
 // export interface RequestType {
 //   redis: {

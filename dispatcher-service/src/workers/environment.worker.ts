@@ -1,19 +1,18 @@
 import { Inject } from 'typescript-ioc';
 import Timeout = NodeJS.Timeout;
-import { WorkerApi, WorkerStatus } from './worker.api';
+import { WorkerApi, WorkerStatus, Status } from './worker.api';
 import { LoggerApi } from '../logger';
-import { ArtifactWorkerConfig } from '../config/artifact-worker.config';
+import { EnvironmentWorkerConfig } from '../config/environment-worker.config';
 import { Observable, of, Subject } from 'rxjs';
-import { ArtifactDao, ArtifactState, Artifact } from '../models/artifact';
-import { TicketDao, Status, TicketObj, Task } from '../models/ticket';
+import { EnvironmentDao, EnvironmentState, Environment, Task } from '../models/environment';
+// import { TicketDao, Status, TicketObj, Task } from '../models/ticket';
 // import { filterPasswords } from '../util/string-util';
 
-export class ArtifactWorker implements WorkerApi {
+export class EnvironmentWorker implements WorkerApi {
 
-  @Inject private config: ArtifactWorkerConfig;
+  @Inject private config: EnvironmentWorkerConfig;
   @Inject private _logger: LoggerApi;
-  @Inject private ticketDao: TicketDao;
-  @Inject private artifactDao: ArtifactDao;
+  @Inject private environmentDao: EnvironmentDao;
 
   private id: any;
   private running = false;
@@ -22,7 +21,7 @@ export class ArtifactWorker implements WorkerApi {
   private rsmq: any;
   private subject: any;
   private proxies = new Map();
-  private artifact: Artifact;
+  private environment: Environment;
   private runbook: any;
   private cancelRunbook: any;
   private task: Task;
@@ -36,13 +35,13 @@ export class ArtifactWorker implements WorkerApi {
    * @param deployment The starting deployment, formatted and ready for first service in runbook
    * @param runbook The sequence of steps to execute in a 2d array, each inner array containing "service" and "requestType"
    */
-  constructor(artifact: Artifact, runbook: any) {
-    this.logger.trace('Constructing OpenShift Worker');
-    this.artifact = artifact;
-    var buildData = artifact.getBuildData();
+  constructor(environment: Environment, runbook: any) {
+    this.logger.trace('Constructing Environment Worker');
+    this.environment = this.environment;
+    var buildData = environment.getBuildData();
     this.runbook = runbook;
     this.task = buildData.task;
-    this.id = artifact.getValue('artifactId');
+    this.id = environment.getValue('artifactId');
 
     this.workerStatus = {
       startDate: buildData.ticket.startDate,
@@ -60,7 +59,7 @@ export class ArtifactWorker implements WorkerApi {
 
 
   public type(): string {
-    return "openshift"
+    return "environmentWorker"
   }
 
 

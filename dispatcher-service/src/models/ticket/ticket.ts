@@ -1,3 +1,5 @@
+import { Task } from '../environment';
+import { Status } from '../../workers/worker.api';
 var mongoose = require('mongoose');
 
 const ticketSchema = new mongoose.Schema({
@@ -17,22 +19,6 @@ const ticketSchema = new mongoose.Schema({
 export const TicketModel = mongoose.model('TicketModel', ticketSchema);
 
 
-export enum Status {
-    PROVISIONING = "Provisioning",
-    UPDATING = "Updating",
-    DELETING = "Deleting",
-    SUCCESS = "Success",
-    FAILED = "Failed",
-    ERROR = "Error"
-}
-
-
-// Also used in buildData of Deployment and given to OpenShift Workers
-export enum Task {
-    CREATE_ARTIFACT = 'createArtifact',
-    MODIFY_ARTIFACT = 'modifyArtifact',
-    DELETE_ARTIFACT = 'deleteArtifact'
-}
 
 
 // TODO add activeJobs?

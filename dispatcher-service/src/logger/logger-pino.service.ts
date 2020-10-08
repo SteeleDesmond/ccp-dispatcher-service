@@ -2,7 +2,7 @@ import * as pino from 'pino';
 import * as expressPino from 'express-pino-logger';
 import { LoggerApi } from './logger.api';
 import {ServerConfig} from '../config/server.config';
-import { Task } from '../models/ticket';
+import { Task } from '../models/environment';
 
 
 var noir = require('pino-noir');

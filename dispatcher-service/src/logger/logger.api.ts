@@ -1,4 +1,4 @@
-import { Task } from '../models/ticket';
+import { Task } from '../models/environment';
 
 // tslint:disable
 export abstract class LoggerApi {

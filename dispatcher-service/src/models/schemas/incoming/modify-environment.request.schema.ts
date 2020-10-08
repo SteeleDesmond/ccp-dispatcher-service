@@ -1,7 +1,7 @@
-export class DeleteArtifactRequestSchema {
+export class ModifyEnvironmentRequestSchema {
 
   schema: any = {
-    "title": "Incoming Delete Deployment Request",
+    "title": "Incoming Modify Environment Request",
     "type": "object",
     "required": [
       "apiVersion",
@@ -20,11 +20,24 @@ export class DeleteArtifactRequestSchema {
             "type": "object",
             "required": [
               "transactionId",
+              "action",
+              "numNodes"
             ],
             "properties": {
               "transactionId": {
                 "type": "string",
                 "minLength": 10
+              },
+              "action": {
+                "type": "string",
+                "pattern": "(add|delete)",
+                "minLength": 3,
+                "maxLength": 6
+              },
+              "numNodes": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 3
               }
             }
           }

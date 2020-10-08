@@ -2,13 +2,13 @@ import { Container, Inject, Singleton } from 'typescript-ioc';
 import Timeout = NodeJS.Timeout;
 
 import { WorkerApi } from './worker.api';
-import { artifactManager } from './artifact-manager';
+import { environmentManager } from './environment-manager';
 import { LoggerApi } from '../logger';
 import { Observable, of, Subject } from 'rxjs';
 import { RedisServer } from 'src/server';
 import Ajv = require('ajv');
 import { OutgoingResponseSchema } from '../models/schemas/outgoing/deployment.generic-outgoing-response.schema';
-import { ArtifactWorkerConfig } from '../config/artifact-worker.config';
+import { EnvironmentWorkerConfig } from '../config/environment-worker.config';
 import { ResponseWorkerConfig } from '../config/response-worker.config';
 var RSMQWorker = require('rsmq-worker');
 var RedisSMQ = require('rsmq');
@@ -62,7 +62,7 @@ export class ResponseWorker implements WorkerApi {
    */
   public start(redis: any): Observable<any> {
     if (this.running) { return this.observer };
-    this.logger.trace("Starting Install Agent Worker");
+    this.logger.trace("Starting Response Worker");
     if (this.observer) { // If it's started already
       return this.observer;
     }
@@ -101,7 +101,7 @@ export class ResponseWorker implements WorkerApi {
       }
       finally {
         if (self.handleMessage(message)) {
-          artifactManager.handleMessage(message);
+          environmentManager.handleMessage(message);
         }
         next();
       }
@@ -163,4 +163,4 @@ export class ResponseWorker implements WorkerApi {
   }
 }
 
-export const responseWorker: WorkerApi = artifactManager.registerWorker(Container.get(ResponseWorker));
+export const responseWorker: WorkerApi = environmentManager.registerWorker(Container.get(ResponseWorker));

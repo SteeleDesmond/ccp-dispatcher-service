@@ -1,6 +1,6 @@
 import {Container} from 'typescript-ioc';
 import {OpenShiftWorker} from '../../src/workers';
-import {OpenShiftWorkerConfig} from '../../src/config/artifact-worker.config';
+import {OpenShiftWorkerConfig} from '../../src/config/environment-worker.config';
 import { v4 as uuidv4 } from 'uuid';
 import Mock = jest.Mock;
 import {LoggerApi, NoopLoggerService} from '../../src/logger';

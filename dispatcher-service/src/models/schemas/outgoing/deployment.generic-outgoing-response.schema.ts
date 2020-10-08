@@ -8,7 +8,7 @@ export class OutgoingResponseSchema {
   private config: ResponseWorkerConfig;
 
   schema: any = {
-    "title": "Generic Outgoing Deployment Stage Response",
+    "title": "Generic Outgoing Environment Artifact Response",
     // "type": "object",
     "required": [
       "apiVersion",

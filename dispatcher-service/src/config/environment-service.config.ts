@@ -1,6 +1,6 @@
 import * as npmPackage from '../../package.json';
 
-export class ArtifactServiceConfig {
+export class EnvironmentServiceConfig {
 
   get apiVersion(): string {
     return process.env.API_VERSION || npmPackage.version;
